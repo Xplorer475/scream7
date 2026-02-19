@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Llamada Entrante...</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: 'Special Elite', cursive;
+    text-align: center;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Special Elite', cursive;
+    font-size: 16px;
+    letter-spacing: 2px;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: darkred;
+    transform: scale(1.1);
+}
+
+.hidden {
+    display: none;
+}
+
+.highlight {
+    color: red;
+    font-size: 24px;
+}
+
+.pulse {
+    animation: pulseAnim 1s infinite;
+}
+
+@keyframes pulseAnim {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- PANTALLA INICIAL -->
+<div class="container" id="startScreen">
+    <h1 class="pulse">📞 LLAMADA ENTRANTE</h1>
+    <p>Llamando a <span class="highlight">Juanita</span>...</p>
+    <button onclick="startCall()">INICIAR LLAMADA</button>
+</div>
+
+<!-- PANTALLA LLAMADA -->
+<div class="container hidden" id="callScreen">
+    <h1>Llamada en curso...</h1>
+    <div id="text"></div>
+    <button id="answerBtn" class="hidden" onclick="showQuestion()">CONTINUAR</button>
+</div>
+
+<!-- PREGUNTA -->
+<div class="container hidden" id="questionScreen">
+    <h1>Una última decisión...</h1>
+    <p>¿Te gustaría tener una noche de películas conmigo?</p>
+    <button onclick="nextScreen()">SÍ</button>
+    <button id="noBtn">NO</button>
+</div>
+
+<!-- INVITACIÓN -->
+<div class="container hidden" id="inviteScreen">
+    <h1>🎬 INVITACIÓN OFICIAL</h1>
+    <p>Película: Scream 7</p>
+    <p>Fecha: 27 de febrero de 2026</p>
+    <p>Hora: 7:10 p.m.</p>
+    <br>
+    <button onclick="confirmDate()">CONFIRMAR CITA</button>
+</div>
+
+<!-- FINAL -->
+<div class="container hidden" id="finalScreen">
+    <h1 class="highlight">💀 CITA CONFIRMADA 💀</h1>
+    <p>Prepárate…</p>
+    <p>Esta historia apenas comienza.</p>
+</div>
+
+<!-- AUDIO -->
+<audio id="ringSound">
+    <source src="ring.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="impactSound">
+    <source src="impact.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const ring = document.getElementById("ringSound");
+let i = 0;
+
+function startCall() {
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("callScreen").classList.remove("hidden");
+    ring.play();
+    typeWriter();
+}
+
+const message = "Hola... Contesta si te atreves.";
+
+function typeWriter() {
+    if (i < message.length) {
+        document.getElementById("text").innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+    } else {
+        document.getElementById("answerBtn").classList.remove("hidden");
+    }
+}
+
+function showQuestion() {
+    ring.pause();
+    document.getElementById("callScreen").classList.add("hidden");
+    document.getElementById("questionScreen").classList.remove("hidden");
+}
+
+function nextScreen() {
+    document.getElementById("questionScreen").classList.add("hidden");
+    document.getElementById("inviteScreen").classList.remove("hidden");
+}
+
+function confirmDate() {
+    const impact = document.getElementById("impactSound");
+    impact.play();
+
+    document.getElementById("inviteScreen").classList.add("hidden");
+    document.getElementById("finalScreen").classList.remove("hidden");
+
+    document.body.style.transition = "0.3s";
+    document.body.style.background = "darkred";
+
+    setTimeout(() => {
+        document.body.style.background = "black";
+    }, 300);
+}
+
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", function() {
+    const x = Math.random() * 300 - 150;
+    const y = Math.random() * 300 - 150;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+</script>
+
+</body>
+</html>
